@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 let 
 	stdenv = pkgs.stdenv;
-	fetchgit = pkgs.build-support.fetchgit;
+	fetchgit = pkgs.fetchgit;
 in rec {
 	zlr-nix = stdenv.mkDerivation rec {
 		name = "zlr-nix";
