@@ -1,4 +1,8 @@
-{stdenv, fetchgit}:
+{ pkgs, lib, config, ... }:
+
+with lib;
+
+let 
 
 zlr = stdenv.mkDerivation (rec {
     # package name
