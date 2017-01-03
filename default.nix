@@ -1,17 +1,26 @@
-{ pkgs ? import <nixpkgs> {} }:
-let 
-	stdenv = pkgs.stdenv;
-	fetchgit = pkgs.fetchgit;
-in rec {
-	zlr-nix = stdenv.mkDerivation rec {
-		name = "zlr-nix";
-		src = fetchgit {
-			url = "git://github.com/spylik/zlr.git";
-			rev = "8e3403f403e65647200583968fe835478dfeda5c";
-		};
-		BuildInputs = [
-			"pkgs.erlang-19.1.6"
-		];
-		builder = builtins.toFile "builder.sh" "make"; 
-	};
+{config, pkgs, ...}:
+
+let
+    stdenv = pkgs.stdenv;
+    zlr-nix = stdenv.mkDerivation rec {
+        
+        # package name
+        name ="zlr-nix";
+        
+        # fetch fromg git
+        src = pkgs.fetchgit {
+            url = "https://github.com/spylik/zlr";
+            rev = "8e3403f403e65647200583968fe835478dfeda5c";
+        };
+
+        # we requeired following package for perform build
+        buildInputs = [
+            stdenv
+            pkgs.erlang
+        ];
+        builder = builtins.toFile "builder.sh" "make";
+    };
+in
+    with pkgs.lib;
+{
 }
