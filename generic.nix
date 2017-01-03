@@ -2,10 +2,10 @@
 
 let
     stdenv = pkgs.stdenv;
-    zlr-nix = stdenv.mkDerivation rec {
+    zlr = stdenv.mkDerivation rec {
         
         # package name
-        name ="zlr-nix";
+        name ="zlr";
         
         # fetch fromg git
         src = pkgs.fetchgit {
@@ -13,14 +13,17 @@ let
             rev = "8e3403f403e65647200583968fe835478dfeda5c";
         };
 
-        # we requeired following package for perform build
+        # we requeired following package to perform build
         buildInputs = [
-            stdenv
             pkgs.erlang
         ];
         builder = builtins.toFile "builder.sh" "make";
     };
-in
-    with pkgs.lib;
-{
+in {
+    systemd.services.zaloraWWW = {
+        description = "Start zalora web service.";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network.target" ];
+        serviceConfig.ExecStart = ''${pkgs.zlr}/_rel/zlr/bin/zlr'';
+    };
 }
