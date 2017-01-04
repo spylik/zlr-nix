@@ -1,25 +1,34 @@
-{ pkgs, lib, config, ... }:
+{ pkgs ? import <nixpkgs> {} }:
 
-with lib;
+let
+    fetchgit = pkgs.fetchgit;
+    make = pkgs.make;
+    erlang = pkgs.erlang;
+    perl = pkgs.perl;
+    git = pkgs.git;
 
-let 
-
-zlr = stdenv.mkDerivation (rec {
-    # package name
-    name ="zlr-0.0.1";
+in rec {
+    zlr = pkgs.stdenv.mkDerivation {
+        # package name
+        name ="zlr-0.0.1";
     
-    # fetch fromg git
-    src = fetchgit {
-        url = "https://github.com/spylik/zlr";
-        rev = "8e3403f403e65647200583968fe835478dfeda5c";
-    };
+        # fetch fromg git
+        src = fetchgit {
+            url = "https://github.com/spylik/zlr";
+            rev = "8e3403f403e65647200583968fe835478dfeda5c";
+            sha256 = "0dc5pl775sz5m31a4qdggaw6nwi3k2irgd2gkq4zirhz4iklzkds";
+        };
 
-    # we requeired following package to perform build
-    buildInputs = [
-        erlang
-    ];
-    builder = builtins.toFile "builder.sh" "
-        echo abrakadabra
-        make
-    ";
-})
+        # we requeired following package to perform build
+        buildInputs = [
+            erlang
+            perl
+            git
+        ];
+
+        # let's build the sources
+        buildPhase = ''
+            make
+        '';
+    };
+}
