@@ -25,6 +25,7 @@ in
         serviceConfig.User = "zlr";
 
         after = [ "network.target" ];
+
         serviceConfig.ExecStart = ''${extpkg.zlr}/bin/zlr start'';
     };
 }

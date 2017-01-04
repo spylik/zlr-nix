@@ -36,6 +36,7 @@ in rec {
         installPhase = ''
             mkdir -p $out
             cp -r ./_rel/zlr/* $out/
+            ln -sfn /var/log/zlr $out/log
         '';
     };
 }
