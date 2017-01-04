@@ -28,6 +28,7 @@ in rec {
 
         # let's build the sources
         buildPhase = ''
+            unset SSL_CERT_FILE     # dirty hack for development
             make
         '';
     };
