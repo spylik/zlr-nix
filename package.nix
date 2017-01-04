@@ -15,8 +15,8 @@ in rec {
         # fetch fromg git
         src = fetchgit {
             url = "https://github.com/spylik/zlr";
-            rev = "8e3403f403e65647200583968fe835478dfeda5c";
-            sha256 = "0dc5pl775sz5m31a4qdggaw6nwi3k2irgd2gkq4zirhz4iklzkds";
+            rev = "5cff4de38b1355174a89c7a81a0b5f1017144069";
+            sha256 = "0mlnqnh1zbjvamfqxwj96aqf7iqgsc251lckh97p8mhxip5vhv3g";
         };
 
         # we requeired following package to perform build
