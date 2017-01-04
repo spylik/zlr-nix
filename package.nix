@@ -28,8 +28,14 @@ in rec {
 
         # let's build the sources
         buildPhase = ''
-            unset SSL_CERT_FILE     # dirty hack for development
+            unset SSL_CERT_FILE     # dirty hack for development (https://github.com/NixOS/nixpkgs/issues/13744)
             make
+        '';
+
+        # copy release into $out
+        installPhase = ''
+            mkdir -p $out
+            cp -r ./_rel/zlr/* $out/
         '';
     };
 }
