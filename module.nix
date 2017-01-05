@@ -6,6 +6,9 @@ let
 in
 
 {
+    # open port
+    networking.firewall.allowedTCPPorts = [80];
+
     # Create separate group for zalora web service
     users.extraGroups.zlr = {};
 
