@@ -1,6 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
+    stdenv = pkgs.stdenv;
     fetchgit = pkgs.fetchgit;
     make = pkgs.make;
     erlang = pkgs.erlang;
@@ -8,7 +9,7 @@ let
     git = pkgs.git;
 
 in rec {
-    zlr = pkgs.stdenv.mkDerivation {
+    zlr = stdenv.mkDerivation {
         # package name
         name ="zlr-0.0.1";
     
@@ -37,6 +38,14 @@ in rec {
             mkdir -p $out
             cp -r ./_rel/zlr/* $out/
             ln -sfn /var/log/zlr $out/log
+
+            # fix pathes in startup shell scripts
+            for f in $out/bin/* ; do
+                substituteInPlace  $f --replace awk           ${pkgs.gawk}/bin/awk
+                substituteInPlace  $f --replace egrep         ${pkgs.gnugrep}/bin/egrep
+                substituteInPlace  $f --replace sed           ${pkgs.gnused}/bin/sed
+            done
         '';
+
     };
 }
