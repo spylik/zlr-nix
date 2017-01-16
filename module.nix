@@ -10,15 +10,15 @@ in
     # open port
     networking.firewall.allowedTCPPorts = [80];
 
-#    # Create separate group for zalora web service
-#    users.extraGroups.zlr = {};
-#
-#    # Create separate user account for zalora web service
-#    users.extraUsers.zlr = {
-#        description = "Zalora web service user";
-#        home = "/var/log/zlr";
-#        createHome = true;
-#    };
+    # Create separate group for zalora web service
+    users.extraGroups.zlr = {};
+
+    # Create separate user account for zalora web service
+    users.extraUsers.zlr = {
+        description = "Zalora web service user";
+        home = "/var/log/zlr";
+        createHome = true;
+    };
 
     # creating system.d service for zalora web service
     systemd.services.zaloraWWW = {
