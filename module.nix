@@ -27,6 +27,7 @@ in
             pkgs.gnused
             pkgs.gzip
             pkgs.less
+            pkgs.utillinux
         ];
 
         description = "Zalora web service.";
