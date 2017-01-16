@@ -34,9 +34,12 @@ in
         wantedBy = [ "multi-user.target" ];
 
         serviceConfig.User = "zlr";
+        serviceConfig.Type = "forking";
 
         after = [ "network.target" ];
 
         serviceConfig.ExecStart = ''${extpkg.zlr}/bin/zlr start'';
     };
+
+    systemd.services.zaloraWWW.enable = true;
 }
