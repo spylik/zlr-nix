@@ -6,6 +6,7 @@ let
 in
 
 {
+
     # open port
     networking.firewall.allowedTCPPorts = [80];
 
@@ -21,6 +22,13 @@ in
 
     # creating system.d service for zalora web service
     systemd.services.zaloraWWW = {
+        path = [
+            pkgs.gawk
+            pkgs.gnused
+            pkgs.gzip
+            pkgs.less
+        ];
+
         description = "Zalora web service.";
          
         wantedBy = [ "multi-user.target" ];
