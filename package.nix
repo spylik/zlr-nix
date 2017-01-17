@@ -1,51 +1,35 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ stdenv, fetchgit, erlang, perl, git}:
 
-let
-    stdenv = pkgs.stdenv;
-    fetchgit = pkgs.fetchgit;
-    make = pkgs.make;
-    erlang = pkgs.erlang;
-    perl = pkgs.perl;
-    git = pkgs.git;
-
-in rec {
-    zlr = stdenv.mkDerivation {
-        # package name
-        name ="zlr-0.0.1";
+stdenv.mkDerivation rec {
+    # package name
+    name = "zlr" + "_" + version;
     
-        # fetch fromg git
-        src = fetchgit {
-            url = "https://github.com/spylik/zlr";
-            rev = "5cff4de38b1355174a89c7a81a0b5f1017144069";
-            sha256 = "0mlnqnh1zbjvamfqxwj96aqf7iqgsc251lckh97p8mhxip5vhv3g";
-        };
-
-        # we requeired following package to perform build
-        buildInputs = [
-            erlang
-            perl
-            git
-        ];
-
-        # let's build the sources
-        buildPhase = ''
-            unset SSL_CERT_FILE     # dirty hack for development (https://github.com/NixOS/nixpkgs/issues/13744)
-            make
-        '';
-
-        # copy release into $out
-        installPhase = ''
-            mkdir -p $out
-            cp -r ./_rel/zlr/* $out/
-            ln -sfn /var/log/zlr $out/log
-
-            # fix pathes in startup shell scripts
-#            for f in $out/bin/* ; do
-#                substituteInPlace  $f --replace awk           ${pkgs.gawk}/bin/awk
-#                substituteInPlace  $f --replace egrep         ${pkgs.gnugrep}/bin/egrep
-#                substituteInPlace  $f --replace sed           ${pkgs.gnused}/bin/sed
-#            done
-        '';
-
+    version = "5cff4de"; # we will use version tags here in the future instead of commit_id
+    
+    # fetch fromg git
+    src = fetchgit {
+        url = "https://github.com/spylik/zlr";
+        rev = version;
+        sha256 = "0mlnqnh1zbjvamfqxwj96aqf7iqgsc251lckh97p8mhxip5vhv3g";
     };
+
+    # we requeired following package to perform build
+    buildInputs = [
+        erlang      # need erlang
+        git         # we need git becouse we need to fetch internal dependencies (defined in Makefile).
+        perl        # some internal deps from Makefile required perl
+    ];
+
+    # let's build the sources
+    buildPhase = ''
+        unset SSL_CERT_FILE     # dirty hack for development (https://github.com/NixOS/nixpkgs/issues/13744).  we do this hack becouse erlang.mk fetch some internal dependencies with curl but in default enviroment nix set nocert
+        make
+    '';
+
+    # copy release into $out
+    installPhase = ''
+        mkdir -p $out
+        cp -r ./_rel/zlr/* $out/        # going to copy compiled release by relx from _rel to the package $out
+        ln -sfn /var/log/zlr $out/log   # relx by default perfom logging in current release directory to the log folder. nix package folder is r/o, so we can catchup with relx and redefine log folder or just make symlink to the service-user home folder what will be writable (we going to create user and home folder in module.nix)
+    '';
 }
