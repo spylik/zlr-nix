@@ -4,7 +4,7 @@ with stdenv.lib;    # for able use license.* platforms.*, etc
 
 stdenv.mkDerivation rec {
     # package name
-    name = "zlr" + "_" + version;
+    name = "zlr" + "-" + version;
 
     version = "5cff4de"; # we will use version tags here in the future instead of commit_id
     
@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
     # let's build the sources
     buildPhase = "make";
 
-    # copy release into $out
+    # copy release into $out and create symlinc for logs
     installPhase = ''
         mkdir -p $out
         cp -r ./_rel/zlr/* $out/        # going to copy compiled release by relx from _rel to the package $out
@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
     meta = {
         description = "Simple erlang http application wrapped as nix package";
         longDescription = ''
-            zlr - is test erlang web application configured to run on port 80.
+            zlr - is a simple test erlang web application configured to run on port 80.
             It use cowboy (https://github.com/ninenines/cowboy) as web-server,
             erlang.mk as Makefile template and relx for release generation.
         '';
