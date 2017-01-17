@@ -1,9 +1,11 @@
-{ stdenv, fetchgit, erlang, perl, git}:
+{ stdenv, fetchgit, erlang, perl, git, cacert}:
+
+with stdenv.lib;    # for able use license.* platforms.*, etc
 
 stdenv.mkDerivation rec {
     # package name
     name = "zlr" + "_" + version;
-    
+
     version = "5cff4de"; # we will use version tags here in the future instead of commit_id
     
     # fetch fromg git
@@ -20,11 +22,11 @@ stdenv.mkDerivation rec {
         perl        # some internal deps from Makefile required perl
     ];
 
+    # set SSL_CERT_FILE cuz git and curl in erlang.mk required it
+    SSL_CERT_FILE="/etc/ssl/certs/ca-bundle.crt";
+
     # let's build the sources
-    buildPhase = ''
-        unset SSL_CERT_FILE     # dirty hack for development (https://github.com/NixOS/nixpkgs/issues/13744).  we do this hack becouse erlang.mk fetch some internal dependencies with curl but in default enviroment nix set nocert
-        make
-    '';
+    buildPhase = "make";
 
     # copy release into $out
     installPhase = ''
@@ -32,4 +34,17 @@ stdenv.mkDerivation rec {
         cp -r ./_rel/zlr/* $out/        # going to copy compiled release by relx from _rel to the package $out
         ln -sfn /var/log/zlr $out/log   # relx by default perfom logging in current release directory to the log folder. nix package folder is r/o, so we can catchup with relx and redefine log folder or just make symlink to the service-user home folder what will be writable (we going to create user and home folder in module.nix)
     '';
+    
+    # package meta information 
+    meta = {
+        description = "Simple erlang http application wrapped as nix package";
+        longDescription = ''
+            zlr - is test erlang web application configured to run on port 80.
+            It use cowboy (https://github.com/ninenines/cowboy) as web-server,
+            erlang.mk as Makefile template and relx for release generation.
+        '';
+        homepage = "https://github.com/spylik/zlr";
+        license = licenses.mit;
+        platforms = platforms.unix;
+    };
 }
