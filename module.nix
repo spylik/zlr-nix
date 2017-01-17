@@ -1,12 +1,10 @@
 {config, pkgs, ...}:
 
 let 
-    # extend packages with our own package
-    extpkg = pkgs.callPackage ./package.nix {};
+    zlr = pkgs.callPackage ./package.nix {};
 in
 
 {
-
     # open port
     networking.firewall.allowedTCPPorts = [80];
 
@@ -35,11 +33,12 @@ in
 
 #        serviceConfig.User = "zlr";
         serviceConfig.User = "root";
+        serviceConfig.Group = "zlr";
         serviceConfig.Type = "forking";
 
         after = [ "network.target" ];
 
-        serviceConfig.ExecStart = ''${extpkg.zlr}/bin/zlr start'';
+        serviceConfig.ExecStart = ''${zlr}/bin/zlr start'';
 
         enable = true;
     };
