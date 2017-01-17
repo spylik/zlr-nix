@@ -26,7 +26,6 @@ in
             pkgs.gawk
             pkgs.gnused
             pkgs.gzip
-            pkgs.less
             pkgs.utillinux
         ];
 
@@ -41,7 +40,7 @@ in
         after = [ "network.target" ];
 
         serviceConfig.ExecStart = ''${extpkg.zlr}/bin/zlr start'';
-    };
 
-    systemd.services.zaloraWWW.enable = true;
+        enable = true;
+    };
 }
