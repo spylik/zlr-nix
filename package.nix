@@ -4,7 +4,7 @@ with stdenv.lib;    # for able use license.* platforms.*, etc
 
 stdenv.mkDerivation rec {
     # package name
-    name = "zlr" + "-" + version;
+    name = "zlr-${version}";
 
     version = "5cff4de"; # we will use version tags here in the future instead of commit_id
     
@@ -22,20 +22,26 @@ stdenv.mkDerivation rec {
         perl        # some internal deps from Makefile required perl
     ];
 
-    # set SSL_CERT_FILE cuz git and curl in erlang.mk required it
-    SSL_CERT_FILE="/etc/ssl/certs/ca-bundle.crt";
-
     # let's build the sources
-    buildPhase = "make";
+    buildPhase = ''
+        # set SSL_CERT_FILE cuz git and curl in erlang.mk required it
+        export SSL_CERT_FILE="/etc/ssl/certs/ca-bundle.crt"
+        make
+    '';
 
     # copy release into $out and create symlinc for logs
     installPhase = ''
         mkdir -p $out
         cp -r ./_rel/zlr/* $out/        # going to copy compiled release by relx from _rel to the package $out
-        ln -sfn /var/log/zlr $out/log   # relx by default perfom logging in current release directory to the log folder. nix package folder is r/o, so we can catchup with relx and redefine log folder or just make symlink to the service-user home folder what will be writable (we going to create user and home folder in module.nix)
+        ln -sfn /var/log/zlr $out/log   # relx by default perfom logging in current release directory to the
+                                        # $project_release/log folder. we can create different
+                                        # production/development/testing enviroment and we can redefine log folder
+                                        # or we can (current solution) just create symlink to the service-user-home
+                                        # folder what will only keep logs and will be be writable by the zlr service
+                                        # system user
     '';
     
-    # package meta information 
+    # package meta information
     meta = {
         description = "Simple erlang http application wrapped as nix package";
         longDescription = ''
