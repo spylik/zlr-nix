@@ -1,4 +1,4 @@
-{ stdenv, fetchgit, erlang, perl, git, cacert}:
+{ stdenv, fetchgit, erlang, perl, git}:
 
 with stdenv.lib;    # for able use license.* platforms.*, etc
 
