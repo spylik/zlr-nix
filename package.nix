@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
     # we requeired following package to perform build
     buildInputs = [
         erlang      # need erlang
-        git         # we need git becouse we need to fetch internal dependencies (defined in Makefile).
+        git         # we need git because we need to fetch internal dependencies (defined in Makefile).
         perl        # some internal deps from Makefile required perl
     ];
 
@@ -32,13 +32,13 @@ stdenv.mkDerivation rec {
     # copy release into $out and create symlinc for logs
     installPhase = ''
         mkdir -p $out
-        cp -r ./_rel/zlr/* $out/        # going to copy compiled release by relx from _rel to the package $out
-        ln -sfn /var/log/zlr $out/log   # relx by default perfom logging in current release directory to the
-                                        # $project_release/log folder. we can create different
-                                        # production/development/testing enviroment and we can redefine log folder
+        cp -r ./_rel/zlr/* $out/        # Going to copy compiled release by relx from _rel to the package $out
+        ln -sfn /var/log/zlr $out/log   # Relx by default perfom logging in current release directory to the
+                                        # $project_release/log folder. We can create different
+                                        # production/development/testing enviroment where we can redefine how we log,
                                         # or we can (current solution) just create symlink to the service-user-home
-                                        # folder what will only keep logs and will be be writable by the zlr service
-                                        # system user
+                                        # folder what will only keep logs and will be writable by the zlr service
+                                        # system user.
     '';
     
     # package meta information

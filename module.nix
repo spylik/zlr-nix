@@ -14,7 +14,7 @@ in
 
     # Create separate user account for zalora web service
     users.extraUsers.zlr = {
-        description = "Zalora web service user";
+        description = "Zalora web service system user";
         home = "/var/log/zlr";
         extraGroups = [
             "zlr"
@@ -41,7 +41,7 @@ in
             User = "zlr";                                   # running by zlr user
             Group = "zlr";                                  # running by group
             ExecStart = ''${zlr}/bin/zlr foreground'';      # start script (for default - need forking, for foreground - simple type)
-            Type = "simple";                                # since we switched for foreground  we need simple
+            Type = "simple";                                # since we switched for foreground we able to use simple type
         };
 
         # we will run this service after systemd network.target
