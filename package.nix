@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
         make
     '';
 
-    # copy release into $out and create symlinc for logs
+    # copy release into $out and create symlink for logs
     installPhase = ''
         mkdir -p $out
         cp -r ./_rel/zlr/* $out/        # Going to copy compiled release by relx from _rel to the package $out
